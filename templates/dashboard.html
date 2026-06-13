@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Dashboard</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .content {
+      flex: 1;
+    }
+
+    .user-info {
+      color: white;
+      margin-left: 10px;
+      margin-right: 20px;
+    }
+
+    .dashboard-section {
+      margin-top: 30px;
+    }
+
+    .footer {
+      background-color: #343a40;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: auto;
+    }
+
+    .btn-profile {
+      margin-right: 10px;
+    }
+
+    .profile-img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">UniVerse</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
+        </ul>
+
+        <!-- Search -->
+        <form class="d-flex mx-auto">
+          <input class="form-control me-2" type="search" placeholder="Search..." />
+          <button class="btn btn-outline-light" type="submit">Search</button>
+        </form>
+
+        <!-- Profile Image + User Info -->
+        <div class="d-flex align-items-center">
+          <img src="{% if user.image and user.image != 'default.png' %}
+                       {{ url_for('static', filename='uploads/' + user.image) }}
+                     {% else %}
+                       {{ url_for('static', filename='images/default.png') }}
+                     {% endif %}"
+               alt="Profile"
+               class="profile-img me-2">
+          <span class="user-info"><b>{{ user.name }}</b> ({{ user.email }})</span>
+          <a href="{{ url_for('profile') }}" class="btn btn-outline-info btn-profile">My Profile</a>
+          <a href="{{ url_for('logout') }}" class="btn btn-outline-light">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container content dashboard-section">
+
+    <!-- 🔔 Flash Messages Block -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show mt-3" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <h2 class="text-center">Welcome, <b>{{ user.name }}</b>! 👋</h2>
+    <p class="text-center text-muted">Access student tools and information from the navigation bar above.</p>
+
+    <!-- ✅ Aligned Cards in Row -->
+    <div class="row justify-content-center mt-4 text-center">
+
+      <!-- Enrolled Courses -->
+      <div class="col-md-3 mb-4">
+        <a href="{{ url_for('my_courses') }}" class="text-decoration-none">
+
+          <div class="card shadow border-primary h-100">
+            <div class="card-body">
+              <h5 class="card-title">📚 Enrolled Courses</h5>
+              <p class="card-text">{{ user.courses|length }} Active Courses</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- GPA -->
+      <div class="col-md-3 mb-4">
+        <div class="card shadow border-success h-100">
+          <div class="card-body">
+            <h5 class="card-title">📈 GPA / Results</h5>
+            <p class="card-text">Current CGPA: {{ user.cgpa or '8.1' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Internship -->
+      <div class="col-md-3 mb-4">
+        <div class="card shadow border-warning h-100">
+          <div class="card-body">
+            <h5 class="card-title">💼 Internship Cell</h5>
+            <p class="card-text">3 Open Opportunities</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enroll in Courses -->
+      <div class="col-md-3 mb-4">
+        <a href="{{ url_for('all_courses') }}" class="text-decoration-none">
+          <div class="card shadow border-info h-100">
+            <div class="card-body">
+              <h5 class="card-title text-info">📘 Enroll in Courses</h5>
+              <p class="card-text text-muted">Browse & Join Available Courses</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    &copy; 2025 UniVerse Student Portal. All rights reserved.
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+
+

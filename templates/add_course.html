@@ -1,0 +1,23 @@
+<!-- templates/add_course.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Course</title>
+</head>
+<body>
+    <h2>Add New Course</h2>
+    <form method="POST">
+        <label>Course Code:</label>
+        <input type="text" name="code" required><br><br>
+
+        <label>Course Name:</label>
+        <input type="text" name="name" required><br><br>
+
+        <label>Description:</label><br>
+        <textarea name="description"></textarea><br><br>
+
+        <button type="submit">Add Course</button>
+    </form>
+    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+</body>
+</html>

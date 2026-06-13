@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Available Courses</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    .enrolled-btn {
+      background-color: gray;
+      color: white;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('dashboard') }}">⬅ Back to Dashboard</a>
+      <span class="navbar-text text-light">
+        Logged in as <strong>{{ user.name }}</strong>
+      </span>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">📚 Available Courses</h2>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% if courses %}
+      <div class="row">
+        {% for course in courses %}
+          <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow">
+              <div class="card-body">
+                <h5 class="card-title">{{ course.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ course.code }}</h6>
+                <p class="card-text">{{ course.description or "No description available." }}</p>
+                
+                {% if course.id in enrolled_ids %}
+                  <button class="btn enrolled-btn w-100" disabled>✅ Enrolled</button>
+                {% else %}
+                  <a href="{{ url_for('enroll', course_id=course.id) }}" class="btn btn-primary w-100">➕ Enroll</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-center text-muted">No courses available at the moment.</p>
+    {% endif %}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
